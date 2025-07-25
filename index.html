@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Diary for Milu</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- SVG Heart Shape Definition -->
+    <svg width="0" height="0" style="position:absolute; z-index:-1;">
+        <defs>
+            <clipPath id="heart-clip" clipPathUnits="objectBoundingBox">
+                <path d="M0.5 1 L0.1 0.5 C-0.1 0.2 0.2 -0.1 0.5 0.2 C0.8 -0.1 1.1 0.2 0.9 0.5 L0.5 1 Z" />
+            </clipPath>
+        </defs>
+    </svg>
+
+    <div id="sparkle-container"></div>
+    <div class="book-container">
+        <div class="book">
+            <div class="book-spine"></div>
+            <!-- New element for visible page edges -->
+            <div class="page-edges"></div>
+            <div class="cover">
+                <div class="heart"></div>
+                <div class="cover-corner top-left"></div>
+                <div class="cover-corner top-right"></div>
+                <div class="cover-corner bottom-left"></div>
+                <div class="cover-corner bottom-right"></div>
+            </div>
+            <div class="page page-1">
+                <div class="page-content">
+                    <p>From the day I met you, my heart found its favorite person.</p>
+                </div>
+            </div>
+            <div class="page page-2">
+                 <div class="page-content">
+                    <p>Every moment with you is a page of happiness in my diary.</p>
+                </div>
+            </div>
+            <div class="page page-3">
+                 <div class="page-content">
+                    <p>I love the way you smile, talk, laugh — everything.</p>
+                </div>
+            </div>
+            <div class="page page-4">
+                 <div class="page-content">
+                    <p>I promise to hold your hand, forever and always.</p>
+                </div>
+            </div>
+            <div class="page page-5">
+                 <div class="page-content">
+                    <p>This diary is just a glimpse of how deeply I love you, Milu.</p>
+                </div>
+            </div>
+            <div class="back-cover">
+                 <p class="end-note">Forever yours 💕</p>
+            </div>
+        </div>
+    </div>
+    <div class="hearts-background"></div>
+    <script src="script.js"></script>
+</body>
+</html>
