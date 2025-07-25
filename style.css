@@ -34,22 +34,16 @@ body {
 }
 
 .book-container {
-    perspective: 1500px;
+    perspective: 2000px; /* Increased perspective for better 3D effect on mobile */
     z-index: 1;
 }
 
 /* --- Responsive Book Sizing --- */
 .book {
-    /* Use viewport width for responsive sizing */
     width: 90vw;
-    height: auto; /* Height is determined by aspect-ratio */
-    
-    /* This maintains the book's shape on all screen sizes */
+    height: auto;
     aspect-ratio: 38 / 52;
-    
-    /* Set a max-width for larger screens */
     max-width: 400px;
-
     position: relative;
     transform-style: preserve-3d;
     transition: transform 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
@@ -81,7 +75,6 @@ body {
     position: absolute;
     right: 0;
     top: 2%;
-    /* Responsive width */
     width: 2.5%; 
     height: 96%;
     background: repeating-linear-gradient(to bottom, #fdf5e6, #fdf5e6 1px, #e1d4c0 1px, #e1d4c0 2px);
@@ -116,10 +109,8 @@ body {
     transform: rotateY(-170deg);
 }
 
-/* --- Responsive Decorative Corners --- */
 .cover-corner {
     position: absolute;
-    /* Use percentages to scale with the cover */
     width: 7%;
     height: 7%;
     background-color: #ffd700;
@@ -187,13 +178,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 5%; /* Use percentage for padding */
+    padding: 5%;
     box-sizing: border-box;
 }
 
 .page p {
     text-align: center;
-    /* Responsive font size for great readability on mobile */
     font-size: clamp(0.9rem, 4.5vw, 1.8rem);
     line-height: 1.6;
 }
@@ -249,3 +239,107 @@ body {
     0% { transform: scale(1); opacity: 1; }
     100% { transform: scale(3); opacity: 0; }
 }
+
+
+/* --- THE RESPONSIVE FIX --- */
+/* This media query targets phones and small tablets */
+@media (max-width: 768px) {
+    .book.open {
+        /*
+         * This is the magic fix:
+         * 1. scale(0.6): Shrinks the book to 60% of its size when open.
+         * 2. translateX(45vw): Shifts the scaled book so it's centered on the screen.
+         * This combination ensures the entire opened book is visible.
+        */
+        transform: translateX(45vw) scale(0.6);
+    }
+}```
+
+### 3. JavaScript (`script.js`) - No Changes
+
+This file remains the same. The CSS handles all the responsive logic.
+
+```javascript
+const book = document.querySelector('.book');
+const cover = document.querySelector('.cover');
+const pages = document.querySelectorAll('.page');
+const sparkleContainer = document.getElementById('sparkle-container');
+const heartsBackground = document.querySelector('.hearts-background');
+
+let currentPage = 0;
+let isBookOpen = false;
+
+function createFloatingHearts() {
+    setInterval(() => {
+        const heart = document.createElement('span');
+        heart.innerHTML = '💕';
+        heart.style.left = `${Math.random() * 100}vw`;
+        heart.style.animationDuration = `${(Math.random() * 5) + 5}s`;
+        heartsBackground.appendChild(heart);
+        
+        setTimeout(() => {
+            heart.remove();
+        }, 10000);
+    }, 300);
+}
+
+function createSparkle(x, y) {
+    const sparkle = document.createElement('div');
+    sparkle.className = 'sparkle';
+    sparkle.style.left = `${x}px`;
+    sparkle.style.top = `${y}px`;
+    sparkleContainer.appendChild(sparkle);
+
+    setTimeout(() => {
+        sparkle.remove();
+    }, 500);
+}
+
+const openBook = () => {
+    if (isBookOpen) return;
+    book.classList.add('open');
+    isBookOpen = true;
+};
+
+const closeBook = (isAtEnd) => {
+    if (!isBookOpen) return;
+    if (isAtEnd) {
+        book.classList.remove('open');
+    }
+    setTimeout(() => {
+        pages.forEach((page, index) => {
+            setTimeout(() => {
+                page.classList.remove('flipped');
+                page.style.zIndex = pages.length - index;
+            }, (pages.length - index) * 75);
+        });
+        currentPage = 0;
+        isBookOpen = false;
+    }, 1200);
+};
+
+const flipPage = (e) => {
+    if (!isBookOpen || currentPage >= pages.length) return;
+
+    createSparkle(e.clientX, e.clientY);
+
+    const pageToFlip = pages[currentPage];
+    pageToFlip.classList.add('flipped');
+    pageToFlip.style.zIndex = currentPage + 6;
+    currentPage++;
+
+    if (currentPage >= pages.length) {
+        setTimeout(() => closeBook(true), 2500);
+    }
+};
+
+cover.addEventListener('click', (e) => {
+    createSparkle(e.clientX, e.clientY);
+    openBook();
+});
+
+pages.forEach(page => {
+    page.addEventListener('click', flipPage);
+});
+
+createFloatingHearts();
